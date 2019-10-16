@@ -11,14 +11,17 @@ SMPLS = $(SAMPLES:%=samples_%)
 SMPLOBJ = $(SAMPLES:%=samples/%/main.o)
 
 INCS = -I include 
-LIBS = -lm -Llib -lnmea
- 
+LIBS = -Llib -lnmea -lm
+
+CFLAGS=-lm
+
 .PHONY: all all-before all-after clean clean-custom doc
  
 all: all-before $(BIN) samples all-after 
 
 all-before:
 	mkdir -p build/nmea_gcc
+	mkdir -p lib
 
 clean: clean-custom 
 	rm -f $(LINKOBJ) $(BIN) $(SMPLOBJ) $(SMPLS)
@@ -38,7 +41,7 @@ build/nmea_gcc/%.o: src/%.c
 samples: $(SMPLS)
 
 samples_%: samples/%/main.o
-	$(CC) $< $(LIBS) -o build/$@
+	$(CC) $< $(LIBS)  -o build/$@
 
 samples/%/main.o: samples/%/main.c
-	$(CC) $(INCS) -c $< -o $@
+	$(CC) $(INCS) -c $<  -o $@
